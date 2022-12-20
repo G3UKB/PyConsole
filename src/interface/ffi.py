@@ -1,45 +1,87 @@
-import time
-from ctypes import *
+#!/usr/bin/env python
+#
+# ffi.py
+#
+# Interface to the Rust back end lib
+# 
+# Copyright (C) 2022 by G3UKB Bob Cowdery
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#    
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#    
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#    
+#  The author can be reached by email at:   
+#     bob@bobcowdery.plus.com
+#
 
-import os
-os.add_dll_directory('E:\\Projects\\RustSDRLib\\trunk\\rust_sdr_lib\\libs')
+# Import all
+from main.imports import *
 
-lib = cdll.LoadLibrary("rustsdrlib.dll")
 
-init = lib.sdrlib_init
-start = lib.sdrlib_run
-stop = lib.sdrlib_close
-freq = lib.sdrlib_freq
-mode = lib.sdrlib_mode
-filt = lib.sdrlib_filter
-disp = lib.sdrlib_disp_data
+#=====================================================
+# Main model class
+#=====================================================
+class Interface:
+    
+    #-------------------------------------------------
+    # Constructor
+    def __init__(self):
+        
+        # Load the library
+        self.lib = cdll.LoadLibrary("rustsdrlib.dll")
+        
+        # Get a handle to all methods
+        self.f_init = lib.sdrlib_init
+        self.f_start = lib.sdrlib_run
+        self.f_stop = lib.sdrlib_close
+        self.f_freq = lib.sdrlib_freq
+        self.f_mode = lib.sdrlib_mode
+        self.f_filt = lib.sdrlib_filter
+        self.f_disp = lib.sdrlib_disp_data
+        
+        # Pointer to display data
+        disp.restype = POINTER(c_float)
+        self.disp_ptr = POINTER(c_float)
 
-init()
-start()
-time.sleep(1)
-freq(7150000)
-print("Set freq")
-time.sleep(2)
-freq(7180000)
-print("Set freq")
-time.sleep(2)
-mode(2)
-print("Set mode")
-time.sleep(2)
-filt(4)
-print("Set filter")
-time.sleep(2)
-
-disp.restype = POINTER(c_float)
-x = POINTER(c_float)
-
-x = disp()
-print("Got disp")
-print("**********\n")
-for n in range (300):
-    print(x[n])
-print("**********\n")
-time.sleep(2)
-print("Term")
-stop()
-print("Done")
+    #=====================================================
+    # PUBLIC
+    #=====================================================
+    def run_lib(self):
+        
+        #Initialise sets up the context
+        self.f_init()
+        
+        # Start runs the lib main thread which starts everything
+        self.f_start()
+    
+    def close_lib(self):
+        # Tidy close lib
+        self.f_stop()
+        
+    #=====================================================
+    # Call level interface
+    def set_freq(self, freq):
+        # Set frequency in Hz
+        self.f_freq(freq)
+    
+    def set_mode(self, mode):
+        # Set mode from mode set
+        self.f_mode(mode)
+        
+    def set_filter(self, filt):
+        # Set filter from filter set
+        self.f_filt(filt)
+     
+    def get_disp_data(self):
+        # Return a pointer to display data
+        return f_disp()
+        
