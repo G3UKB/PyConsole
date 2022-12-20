@@ -40,16 +40,16 @@ class Interface:
         self.lib = cdll.LoadLibrary("rustsdrlib.dll")
         
         # Get a handle to all methods
-        self.f_init = lib.sdrlib_init
-        self.f_start = lib.sdrlib_run
-        self.f_stop = lib.sdrlib_close
-        self.f_freq = lib.sdrlib_freq
-        self.f_mode = lib.sdrlib_mode
-        self.f_filt = lib.sdrlib_filter
-        self.f_disp = lib.sdrlib_disp_data
+        self.f_init = self.lib.sdrlib_init
+        self.f_start = self.lib.sdrlib_run
+        self.f_stop = self.lib.sdrlib_close
+        self.f_freq = self.lib.sdrlib_freq
+        self.f_mode = self.lib.sdrlib_mode
+        self.f_filt = self.lib.sdrlib_filter
+        self.f_disp = self.lib.sdrlib_disp_data
         
         # Pointer to display data
-        disp.restype = POINTER(c_float)
+        self.f_disp.restype = POINTER(c_float)
         self.disp_ptr = POINTER(c_float)
 
     #=====================================================

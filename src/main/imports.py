@@ -55,9 +55,10 @@ from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPush
 from interface.ffi import *
 
 #Common
-#from common.defs import *
+from common.defs import *
 # Framework
-#from framework.instance_cache import *
+from framework.instance_cache import *
+from framework.broker import *
 # Model
 #from model.model import *
 # Bindings

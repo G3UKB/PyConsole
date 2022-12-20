@@ -38,11 +38,7 @@ class AppMain:
     def main(self):
         
         # Create lib interface
-        self.lib_if = interface()
-        
-        self.lib_if.run_lib()
-        time.sleep(5)
-        self.lib_if.close_lib()
+        self.lib_if = Interface()
         
 #=====================================================
 # Entry point
