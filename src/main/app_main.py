@@ -37,8 +37,31 @@ class AppMain:
     # Start processing and wait for user to exit the application
     def main(self):
         
+        # The one and only QT application
+        self.__qtapp = QApplication([])
+        
+        # Restore the model
+        self.__m = Model()
+        addToCache('model_inst', self.__m)
+        self.__m.restore_model()
+        
         # Create lib interface
         self.lib_if = Interface()
+        addToCache("interface_inst", self.lib_if)
+        
+        # Init and start the server
+        self.lib_if.run_lib()
+        
+        # Create the main window class
+        self.__w = MainWindow()
+        # Make visible
+        self.__w.show()
+        
+        # Enter the GUI event loop
+        r = self.__qtapp.exec_()
+        
+        # Close the lib
+        self.lib_if.close_lib()
         
 #=====================================================
 # Entry point

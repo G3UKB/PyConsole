@@ -60,24 +60,23 @@ from common.defs import *
 from framework.instance_cache import *
 from framework.broker import *
 # Model
-#from model.model import *
+from model.model import *
 # Bindings
 #from binding.server_api import *
 # Connector
 #from connector.connector import *
 # UI
-#from ui.components.vfo import *
-#from ui.components.button_base import *
-#from ui.components.modes import *
-#from ui.components.filters import *
-#from ui.components.agc import *
-#from ui.components.audio import *
-#from ui.displays.display import *
+from ui.components.vfo import *
+from ui.components.button_base import *
+from ui.components.modes import *
+from ui.components.filters import *
+from ui.components.agc import *
+from ui.display.display import *
 # Windows
-#from ui.windows.window_base import *
-#from ui.windows.display_window import *
-#from ui.windows.main_window import *
-#from ui.windows.aux_window import *
+from ui.windows.window_base import *
+from ui.windows.display_window import *
+from ui.windows.main_window import *
+from ui.windows.aux_window import *
 
 
 
