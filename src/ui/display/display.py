@@ -116,11 +116,12 @@ class Panadapter(QWidget):
 		self.__freq_disp.setText('')
 		
 		# Get the connector instance
-		self.__con = getInstance('conn_inst')
+		self.__con = getInstance('interface_inst')
 		
 		# Set display
 		self.__pixels = width - self.__left_border - self.__right_border
-		self.__con.set_display(rx_id, self.__pixels)
+		#self.__con.set_display(rx_id, self.__pixels)
+		self.__con.set_disp_width(self.__pixels)
 		
 		# Refresh display every IDLE_TICKER ms
 		QTimer.singleShot(IDLE_TICKER, self.timerEvent)
@@ -152,7 +153,7 @@ class Panadapter(QWidget):
 		self.__pixels = self.__width - self.__left_border - self.__right_border
 		# Tell server width has changed
 		# This changes the number of pixels returned to match the width
-		self.__con.set_display_width(self.__rx_id, self.__pixels)
+		self.__con.set_disp_width(self.__pixels)
 		
 	def paintEvent(self, e):
 		# Paint context
@@ -189,14 +190,14 @@ class Panadapter(QWidget):
 		""" Process any waiting update """
 		# Make context for rendering
 		# Get data if ready
-		r, self.__display_data = self.__con.get_display_data(self.__rx_id)
+		self.__display_data = self.__con.get_disp_data()
 		#print(r,self.__display_data)
-		if r:
-			# Render
-			self.__makePainterPaths()
-			self.__process_pan_data()
-			# Force a paint
-			self.update()
+		#if r:
+		# Render
+		self.__makePainterPaths()
+		self.__process_pan_data()
+		# Force a paint
+		self.update()
 		
 		# Call again in IDLE_TICKER ms
 		QTimer.singleShot(IDLE_TICKER, self.timerEvent)

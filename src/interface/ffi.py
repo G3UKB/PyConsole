@@ -46,6 +46,7 @@ class Interface:
         self.f_mode = self.lib.sdrlib_mode
         self.f_filt = self.lib.sdrlib_filter
         self.f_disp = self.lib.sdrlib_disp_data
+        self.f_width = self.lib.sdrlib_update_disp_width
         # Pointer to display data
         self.f_disp.restype = POINTER(c_float)
         self.disp_ptr = POINTER(c_float)
@@ -81,5 +82,7 @@ class Interface:
      
     def get_disp_data(self):
         # Return a pointer to display data
-        return f_disp()
-        
+        return self.f_disp()
+    
+    def set_disp_width(self, width):
+        self.f_width(width)
