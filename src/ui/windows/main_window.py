@@ -116,25 +116,20 @@ class MainWindow(WindowBase):
     def __run(self) :
         
         # Perform a server warmstart
-        if self.con.warmstart():
-            self.statusBar.showMessage("Running",0)
-            self.statusBar.setStyleSheet("QStatusBar {background-color: rgb(102,102,102); color: rgb(0,64,0); font: bold 12px}")
-        else:
-            self.statusBar.showMessage("Stopped",0)
-            self.statusBar.setStyleSheet("QStatusBar {background-color: rgb(102,102,102); color: rgb(147,11,11); font: bold 12px}")
+        self.con.run_lib()
+        self.statusBar.showMessage("Running",0)
+        self.statusBar.setStyleSheet("QStatusBar {background-color: rgb(102,102,102); color: rgb(0,64,0); font: bold 12px}")
         
     #-------------------------------------------------
     # Stop button event        
     def __stop(self):
         # Stop radio
         state = Model.get_state_model()
-        if self.con.close_lib():
-            self.statusBar.showMessage("Stopped",0)
-            self.statusBar.setStyleSheet("QStatusBar {background-color: rgb(102,102,102); color: rgb(147,11,11); font: bold 12px}")
-            state['RADIO-RUN'] = False
-        else:
-            print("Sorry, radio failed to stop!")
-    
+        self.con.close_lib()
+        self.statusBar.showMessage("Stopped",0)
+        self.statusBar.setStyleSheet("QStatusBar {background-color: rgb(102,102,102); color: rgb(147,11,11); font: bold 12px}")
+        state['RADIO-RUN'] = False
+        
     #-------------------------------------------------
     # Display button event        
     def __disp(self):

@@ -49,8 +49,8 @@ class AppMain:
         self.lib_if = Interface()
         addToCache("interface_inst", self.lib_if)
         
-        # Init and start the server
-        self.lib_if.run_lib()
+        # Init server
+        self.lib_if.init_lib()
         
         # Create the main window class
         self.__w = MainWindow()
