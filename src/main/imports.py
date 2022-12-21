@@ -40,6 +40,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 from ctypes import *
 os.add_dll_directory('E:\\Projects\\RustSDRLib\\trunk\\rust_sdr_lib\\libs')
+#os.add_dll_directory('C:\\Projects\\RustSDRLib\\trunk\\rust_sdr_lib\\libs')
 
 #=====================================================
 # Lib imports
