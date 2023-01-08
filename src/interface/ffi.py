@@ -28,7 +28,7 @@ from main.imports import *
 
 
 #=====================================================
-# Main model class
+# Library interface
 #=====================================================
 class Interface:
     

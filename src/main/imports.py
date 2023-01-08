@@ -44,11 +44,11 @@ os.add_dll_directory('E:\\Projects\\RustSDRLib\\trunk\\rust_sdr_lib\\libs')
 
 #=====================================================
 # Lib imports
-from PyQt5.QtCore import Qt, QObject, QEvent, QTimer, QMargins, QPointF
-from PyQt5.QtGui import QPalette, QColor, QIcon, QPen, QBrush, QFont, QPainterPath, QPainter
-from PyQt5.QtWidgets import QApplication, qApp
-from PyQt5.QtWidgets import QWidget, QStyle, QStatusBar, QMainWindow, QAction
-from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QButtonGroup, QComboBox, QCheckBox
+#from PyQt5.QtCore import Qt, QObject, QEvent, QTimer, QMargins, QPointF
+#from PyQt5.QtGui import QPalette, QColor, QIcon, QPen, QBrush, QFont, QPainterPath, QPainter
+#from PyQt5.QtWidgets import QApplication, qApp
+#from PyQt5.QtWidgets import QWidget, QStyle, QStatusBar, QMainWindow, QAction
+#from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QButtonGroup, QComboBox, QCheckBox
 
 #=====================================================
 # Application imports
@@ -67,17 +67,18 @@ from model.model import *
 # Connector
 #from connector.connector import *
 # UI
-from ui.components.vfo import *
-from ui.components.button_base import *
-from ui.components.modes import *
-from ui.components.filters import *
-from ui.components.agc import *
-from ui.display.display import *
+from ui.tk.tk_ui import *
+#from ui.components.vfo import *
+#from ui.components.button_base import *
+#from ui.components.modes import *
+#from ui.components.filters import *
+#from ui.components.agc import *
+#from ui.display.display import *
 # Windows
-from ui.windows.window_base import *
-from ui.windows.display_window import *
-from ui.windows.main_window import *
-from ui.windows.aux_window import *
+#from ui.windows.window_base import *
+#from ui.windows.display_window import *
+#from ui.windows.main_window import *
+#from ui.windows.aux_window import *
 
 
 
