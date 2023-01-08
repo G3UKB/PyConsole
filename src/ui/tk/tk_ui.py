@@ -98,16 +98,22 @@ class TkUi:
             l = ttk.Label(frm, style='MHz.TLabel', text="0")
             l.grid(column=dig, row=0)
             self.vfo_digits.append(l)
+            binding = [self.on100MHz,self.on10MHz,self.on1MHz]
+            l.bind("<MouseWheel>", binding[dig])
         ttk.Label(frm, style='Sep.TLabel', text="-").grid(column=3, row=0)
         for dig in  range(4,7):
             l = ttk.Label(frm, style='KHz.TLabel', text="0")
             l.grid(column=dig, row=0)
             self.vfo_digits.append(l)
+            binding = [self.on100KHz,self.on10KHz,self.on1KHz]
+            l.bind("<MouseWheel>", binding[dig-4])
         ttk.Label(frm, style='Sep.TLabel', text="-").grid(column=7, row=0)
         for dig in  range(8,11):
             l = ttk.Label(frm, style='Hz.TLabel', text="0")
             l.grid(column=dig, row=0)
             self.vfo_digits.append(l)
+            binding = [self.on100Hz,self.on10Hz,self.on1Hz]
+            l.bind("<MouseWheel>", binding[dig-8])
         
     def build_modes(self, frm):
         # Build modes in a 4x4 matrix
@@ -154,8 +160,25 @@ class TkUi:
     #-------------------------------------------------
     # Event methods
     #
-    def onMouseWheel(evnt):
-        print(evnt)
+    def on100MHz(self, evnt):
+        print("100MHz")
+    def on10MHz(self, evnt):
+        print("10MHz")
+    def on1MHz(self, evnt):
+        print("1MHz")
+    def on100KHz(self, evnt):
+        print("100KHz")
+    def on10KHz(self, evnt):
+        print("10KHz")
+    def on1KHz(self, evnt):
+        print("1KHz")
+    def on100Hz(self, evnt):
+        print("100Hz")
+    def on10Hz(self, evnt):
+        print("10Hz")
+    def on1Hz(self, evnt):
+        print("1Hz")
+    
 
     #-------------------------------------------------
     # Control methods
