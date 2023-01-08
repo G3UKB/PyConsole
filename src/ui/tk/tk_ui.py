@@ -50,8 +50,9 @@ class TkUi:
         self.style.configure('Filt.TButton', font='helvetica 12', background='red', foreground='blue', padding=20)
         self.style.configure('Cont.TButton', font='helvetica 12', background='red', foreground='blue', padding=20)
 
-        # VFO digits
+        # Component state
         self.vfo_digits = []
+        self.__last_freq = 7.1
         self.modes = []
         self.filters = []
         
@@ -114,6 +115,7 @@ class TkUi:
             self.vfo_digits.append(l)
             binding = [self.on100Hz,self.on10Hz,self.on1Hz]
             l.bind("<MouseWheel>", binding[dig-8])
+        self.__adjust_vfo(self.__last_freq)
         
     def build_modes(self, frm):
         # Build modes in a 4x4 matrix
@@ -146,6 +148,29 @@ class TkUi:
     #-------------------------------------------------
     # Utility methods
     #
+    #-------------------------------------------------
+    # Rewrite the VFO digits with current frequency
+    def __adjust_vfo(self, freq):
+        """
+        Set the VFO to the given frequency
+        
+        freq    --  float freq to set in MHz
+        
+        """
+        
+        freq_str = str((int(freq*1000000))).zfill(9)
+        self.vfo_digits[0].config(text=freq_str[0])
+        self.vfo_digits[1].config(text=freq_str[1])
+        self.vfo_digits[2].config(text=freq_str[2])
+        self.vfo_digits[3].config(text=freq_str[3])
+        self.vfo_digits[4].config(text=freq_str[4])
+        self.vfo_digits[5].config(text=freq_str[5])
+        self.vfo_digits[6].config(text=freq_str[6])
+        self.vfo_digits[7].config(text=freq_str[7])
+        self.vfo_digits[8].config(text=freq_str[8])
+        
+        self.__last_freq = freq
+        
     # Used to create rectangles with alpha as this requires use of PIL lib
     def create_rectangle(self, x1, y1, x2, y2, **kwargs):
         if 'alpha' in kwargs:
