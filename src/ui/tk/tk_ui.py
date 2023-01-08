@@ -177,7 +177,7 @@ class TkUi:
             inc = -inc            
         self.__last_freq = self.__last_freq + inc
         self.__adjust_vfo(self.__last_freq)
-        if self.init: self.__con.set_freq(self.__last_freq)
+        if self.init: self.__con.set_freq(int(self.__last_freq * 1000000))
         
     # Used to create rectangles with alpha as this requires use of PIL lib
     def create_rectangle(self, x1, y1, x2, y2, **kwargs):
