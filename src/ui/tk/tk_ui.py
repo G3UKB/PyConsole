@@ -170,6 +170,14 @@ class TkUi:
         self.vfo_digits[8].config(text=freq_str[8])
         
         self.__last_freq = freq
+    
+    def __inc_freq(self, evnt, inc):
+        v = inc
+        if evnt.delta < 0:
+            inc = -inc            
+        self.__last_freq = self.__last_freq + inc
+        self.__adjust_vfo(self.__last_freq)
+        if self.init: self.__con.set_freq(self.__last_freq)
         
     # Used to create rectangles with alpha as this requires use of PIL lib
     def create_rectangle(self, x1, y1, x2, y2, **kwargs):
@@ -186,25 +194,24 @@ class TkUi:
     # Event methods
     #
     def on100MHz(self, evnt):
-        print("100MHz")
+        self.__inc_freq(evnt, 100.0)
     def on10MHz(self, evnt):
-        print("10MHz")
+        self.__inc_freq(evnt, 10.0)
     def on1MHz(self, evnt):
-        print("1MHz")
+        self.__inc_freq(evnt, 1.0)
     def on100KHz(self, evnt):
-        print("100KHz")
+        self.__inc_freq(evnt, 0.1)
     def on10KHz(self, evnt):
-        print("10KHz")
+        self.__inc_freq(evnt, 0.01)
     def on1KHz(self, evnt):
-        print("1KHz")
+        self.__inc_freq(evnt, 0.001)
     def on100Hz(self, evnt):
-        print("100Hz")
+        self.__inc_freq(evnt, 0.0001)
     def on10Hz(self, evnt):
-        print("10Hz")
+        self.__inc_freq(evnt, 0.00001)
     def on1Hz(self, evnt):
-        print("1Hz")
-    
-
+        self.__inc_freq(evnt, 0.000001)
+        
     #-------------------------------------------------
     # Control methods
     #
