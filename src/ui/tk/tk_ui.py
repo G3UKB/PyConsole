@@ -66,6 +66,11 @@ class TkUi:
         # To hold the newly created images
         self.images = []
         
+        # Drawing parameters
+        self.__high_db = -20
+        self.__low_db = -140
+        self.__span_freq = 48000
+        
         # Get the connector instance
         self.__con = getInstance('interface_inst')
         self.init = False
