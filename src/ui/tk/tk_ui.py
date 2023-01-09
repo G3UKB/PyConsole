@@ -157,6 +157,8 @@ class TkUi:
     
     def build_display(self, canvas):
         self.create_rectangle(0, 0, 600, 300, fill='dark slate gray')
+        self.canvas.create_line(0,0,300,300, fill="#fb0")
+        self.canvas.create_text(20, 30, anchor=W, font="Purisa", fill="#fb0", text="Most relationships seem so transitory")
     
     #-------------------------------------------------
     # Utility methods
