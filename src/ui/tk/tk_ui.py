@@ -45,19 +45,19 @@ class TkUi:
         self.style.configure('MHz.TLabel', font='helvetica 30', background='white', foreground='blue', padding=20)
         self.style.configure('KHz.TLabel', font='helvetica 30', background='white', foreground='blue', padding=20)
         self.style.configure('Hz.TLabel', font='helvetica 25', background='white', foreground='red', padding=20)
-        self.style.configure('Sep.TLabel', font='helvetica 30', background='white', foreground='black', padding=20)
-        self.style.configure('Mode.TButton', font='helvetica 12', background='red', foreground='blue', padding=20)
-        self.style.configure('Filt.TButton', font='helvetica 12', background='red', foreground='blue', padding=20)
-        self.style.configure('Cont.TButton', font='helvetica 12', background='red', foreground='blue', padding=20)
+        self.style.configure('Sep.TLabel', font='helvetica 30', background='white', foreground='black', padding=2)
+        self.style.configure('Mode.TButton', font='helvetica 10', background='red', foreground='blue', padding=2)
+        self.style.configure('Filt.TButton', font='helvetica 10', background='red', foreground='blue', padding=2)
+        self.style.configure('Cont.TButton', font='helvetica 12', background='red', foreground='blue', padding=2)
 
         # Component state
         self.vfo_digits = []
-        self.__last_freq = 7.1
+        self.__last_freq = 7100000
         self.modes = []
         self.filters = []
         
         # Canvas on which to build graphics
-        self.canvas = Canvas(width=300, height=200)
+        self.canvas = Canvas(width=600, height=400)
         # To hold the newly created images
         self.images = []
         
@@ -82,16 +82,23 @@ class TkUi:
         control_frm = ttk.Frame(self.root, padding=10)
         
         # Place the forms in a grid
-        vfo_frm.grid(column=0, row=0, columnspan=4)
-        mode_frm.grid(column=0, row=1, rowspan=3)
-        filter_frm.grid(column=0, row=4, rowspan=3)
-        control_frm.grid(column=0, row=7)
+        #vfo_frm.grid(column=0, row=0, columnspan=4)
+        #mode_frm.grid(column=0, row=1, rowspan=3)
+        #filter_frm.grid(column=0, row=4, rowspan=3)
+        #control_frm.grid(column=0, row=7)
+        
+        vfo_frm.grid(column=0, row=0, columnspan=2)
+        mode_frm.grid(column=0, row=1)
+        filter_frm.grid(column=0, row=2)
+        control_frm.grid(column=0, row=3)
+        self.canvas.grid(column=1, row=1, rowspan=3)
         
         # Build components
         self.build_vfo(vfo_frm)
         self.build_modes(mode_frm)
         self.build_filters(filter_frm)
         self.build_control(control_frm)
+        self.build_display(self.canvas)
      
     def build_vfo(self, frm):
         # VFO is 9 digits in sets of 3 MHz, KHZ and Hz
@@ -121,8 +128,8 @@ class TkUi:
         # Build modes in a 4x4 matrix
         modes = ('LSB','USB','DSB','CWU','CWL','FM','AM','DIGU','SPEC','DIGL','SAM','DRM')
         index = 0
-        for row in range(0,3):
-            for col in range(0,4):
+        for row in range(0,4):
+            for col in range(0,3):
                 m = ttk.Button(frm, style='Mode.TButton', text=modes[index], command = partial( self.set_mode, index))
                 m.grid(column=col, row=row)
                 self.modes.append(m)
@@ -145,6 +152,9 @@ class TkUi:
         stop = ttk.Button(frm, style='Cont.TButton', text="Stop", command = self.stop_lib)
         stop.grid(column=1, row=1)
     
+    def build_display(self, canvas):
+        self.create_rectangle(0, 0, 600, 400, fill='blue')
+    
     #-------------------------------------------------
     # Utility methods
     #
@@ -154,11 +164,11 @@ class TkUi:
         """
         Set the VFO to the given frequency
         
-        freq    --  float freq to set in MHz
+        freq    --  freq to set in Hz
         
         """
         
-        freq_str = str((int(freq*1000000))).zfill(9)
+        freq_str = str(freq).zfill(9)
         self.vfo_digits[0].config(text=freq_str[0])
         self.vfo_digits[1].config(text=freq_str[1])
         self.vfo_digits[2].config(text=freq_str[2])
@@ -177,7 +187,7 @@ class TkUi:
             inc = -inc            
         self.__last_freq = self.__last_freq + inc
         self.__adjust_vfo(self.__last_freq)
-        if self.init: self.__con.set_freq(int(self.__last_freq * 1000000))
+        if self.init: self.__con.set_freq(self.__last_freq)
         
     # Used to create rectangles with alpha as this requires use of PIL lib
     def create_rectangle(self, x1, y1, x2, y2, **kwargs):
@@ -187,30 +197,30 @@ class TkUi:
             fill = root.winfo_rgb(fill) + (alpha,)
             image = Image.new('RGBA', (x2-x1, y2-y1), fill)
             images.append(ImageTk.PhotoImage(image))
-            canvas.create_image(x1, y1, image=images[-1], anchor='nw')
-        canvas.create_rectangle(x1, y1, x2, y2, **kwargs)
+            self.canvas.create_image(x1, y1, image=images[-1], anchor='nw')
+        self.canvas.create_rectangle(x1, y1, x2, y2, **kwargs)
     
     #-------------------------------------------------
     # Event methods
     #
     def on100MHz(self, evnt):
-        self.__inc_freq(evnt, 100.0)
+        self.__inc_freq(evnt, 100000000)
     def on10MHz(self, evnt):
-        self.__inc_freq(evnt, 10.0)
+        self.__inc_freq(evnt, 10000000)
     def on1MHz(self, evnt):
-        self.__inc_freq(evnt, 1.0)
+        self.__inc_freq(evnt, 1000000)
     def on100KHz(self, evnt):
-        self.__inc_freq(evnt, 0.1)
+        self.__inc_freq(evnt, 100000)
     def on10KHz(self, evnt):
-        self.__inc_freq(evnt, 0.01)
+        self.__inc_freq(evnt, 10000)
     def on1KHz(self, evnt):
-        self.__inc_freq(evnt, 0.001)
+        self.__inc_freq(evnt, 1000)
     def on100Hz(self, evnt):
-        self.__inc_freq(evnt, 0.0001)
+        self.__inc_freq(evnt, 100)
     def on10Hz(self, evnt):
-        self.__inc_freq(evnt, 0.00001)
+        self.__inc_freq(evnt, 10)
     def on1Hz(self, evnt):
-        self.__inc_freq(evnt, 0.000001)
+        self.__inc_freq(evnt, 1)
         
     #-------------------------------------------------
     # Control methods
