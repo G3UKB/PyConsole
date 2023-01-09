@@ -41,14 +41,19 @@ class TkUi:
         self.root = Tk()
         # Create a style object
         self.style = ttk.Style()
+        # Set a decent theme
+        self.style.theme_use('alt')
+        self.root.configure(bg='dark slate gray')
+        
         # Set some styles
-        self.style.configure('MHz.TLabel', font='helvetica 30', background='white', foreground='blue', padding=20)
-        self.style.configure('KHz.TLabel', font='helvetica 30', background='white', foreground='blue', padding=20)
-        self.style.configure('Hz.TLabel', font='helvetica 25', background='white', foreground='red', padding=20)
-        self.style.configure('Sep.TLabel', font='helvetica 30', background='white', foreground='black', padding=2)
-        self.style.configure('Mode.TButton', font='helvetica 10', background='red', foreground='blue', padding=2)
-        self.style.configure('Filt.TButton', font='helvetica 10', background='red', foreground='blue', padding=2)
-        self.style.configure('Cont.TButton', font='helvetica 12', background='red', foreground='blue', padding=2)
+        self.style.configure('B.TFrame', background='dark slate gray')
+        self.style.configure('MHz.TLabel', font='helvetica 30', background='dark slate gray', foreground='blue', padding=20)
+        self.style.configure('KHz.TLabel', font='helvetica 30', background='dark slate gray', foreground='blue', padding=20)
+        self.style.configure('Hz.TLabel', font='helvetica 25', background='dark slate gray', foreground='orange', padding=20)
+        self.style.configure('Sep.TLabel', font='helvetica 30', background='dark slate gray', foreground='black', padding=2)
+        self.style.configure('Mode.TButton', font='helvetica 10', background='dark slate gray', foreground='chocolate', padding=2)
+        self.style.configure('Filt.TButton', font='helvetica 10', background='dark slate gray', foreground='chocolate', padding=2)
+        self.style.configure('Cont.TButton', font='helvetica 12', background='dark slate gray', foreground='orange', padding=2)
 
         # Component state
         self.vfo_digits = []
@@ -57,7 +62,7 @@ class TkUi:
         self.filters = []
         
         # Canvas on which to build graphics
-        self.canvas = Canvas(width=600, height=400)
+        self.canvas = Canvas(width=600, height=300)
         # To hold the newly created images
         self.images = []
         
@@ -77,20 +82,18 @@ class TkUi:
     def build_ui(self):
         # A form for each major component
         vfo_frm = ttk.Frame(self.root, padding=10)
+        vfo_frm.configure(style='B.TFrame')
         mode_frm = ttk.Frame(self.root, padding=10)
+        mode_frm.configure(style='B.TFrame')
         filter_frm = ttk.Frame(self.root, padding=10)
+        filter_frm.configure(style='B.TFrame')
         control_frm = ttk.Frame(self.root, padding=10)
+        control_frm.configure(style='B.TFrame')
         
-        # Place the forms in a grid
-        #vfo_frm.grid(column=0, row=0, columnspan=4)
-        #mode_frm.grid(column=0, row=1, rowspan=3)
-        #filter_frm.grid(column=0, row=4, rowspan=3)
-        #control_frm.grid(column=0, row=7)
-        
-        vfo_frm.grid(column=0, row=0, columnspan=2)
-        mode_frm.grid(column=0, row=1)
-        filter_frm.grid(column=0, row=2)
-        control_frm.grid(column=0, row=3)
+        vfo_frm.grid(column=0, row=0, columnspan=2, sticky='N')
+        mode_frm.grid(column=0, row=1, sticky='N')
+        filter_frm.grid(column=0, row=2, sticky='N')
+        control_frm.grid(column=0, row=3, sticky='S')
         self.canvas.grid(column=1, row=1, rowspan=3)
         
         # Build components
@@ -153,7 +156,7 @@ class TkUi:
         stop.grid(column=1, row=1)
     
     def build_display(self, canvas):
-        self.create_rectangle(0, 0, 600, 400, fill='blue')
+        self.create_rectangle(0, 0, 600, 300, fill='dark slate gray')
     
     #-------------------------------------------------
     # Utility methods
