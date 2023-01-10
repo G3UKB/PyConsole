@@ -192,8 +192,12 @@ class TkUi:
     
     def v_grid(self, canvas ):
         x_inc = (self.__canvas_w - self.__l_margin - self.__r_margin) / self.__h_step
+        f_start = float((self.__last_freq - (self.__span_freq/2))/1000000.0)
         for step in range(0, self.__h_step + 1):
-            self.canvas.create_line(self.__l_margin + (x_inc * step), self.__t_margin, self.__l_margin + (x_inc * step), self.__canvas_h - self.__b_margin, fill=self.__grid_color)    
+            self.canvas.create_line(self.__l_margin + (x_inc * step), self.__t_margin, self.__l_margin + (x_inc * step), self.__canvas_h - self.__b_margin, fill=self.__grid_color)
+            # Draw legend
+            f = str("%.3f" % round(f_start + float((self.__f_step * step)/1000000.0) ,3))
+            self.canvas.create_text(self.__l_margin - 15 + (x_inc * step), self.__canvas_h - 10, anchor=W, font="Purisa 10", fill="#fb0", text=f)
             
     #-------------------------------------------------
     # Utility methods
@@ -220,6 +224,8 @@ class TkUi:
         self.vfo_digits[8].config(text=freq_str[8])
         
         self.__last_freq = freq
+        self.build_display(self.canvas)
+        self.root.update()
     
     def __inc_freq(self, evnt, inc):
         v = inc
