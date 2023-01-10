@@ -62,14 +62,29 @@ class TkUi:
         self.filters = []
         
         # Canvas on which to build graphics
-        self.canvas = Canvas(width=600, height=300)
+        self.__canvas_w = 600
+        self.__canvas_h = 300
+        self.canvas = Canvas(width=self.__canvas_w, height=self.__canvas_h)
         # To hold the newly created images
         self.images = []
         
         # Drawing parameters
+        # db
         self.__high_db = -20
         self.__low_db = -140
+        self.__db_step = 20
+        self.__v_step = int((abs(self.__low_db) + self.__high_db) / self.__db_step)
+        # freq
         self.__span_freq = 48000
+        self.__f_step = 6000
+        self.__h_step = int(self.__span_freq / self.__f_step)
+        # margins
+        self.__l_margin = 40
+        self.__r_margin = 30
+        self.__t_margin = 20
+        self.__b_margin = 30
+        # colors
+        self.__grid_color = 'slate gray'
         
         # Get the connector instance
         self.__con = getInstance('interface_inst')
@@ -162,9 +177,24 @@ class TkUi:
     
     def build_display(self, canvas):
         self.create_rectangle(0, 0, 600, 300, fill='dark slate gray')
-        self.canvas.create_line(0,0,300,300, fill="#fb0")
-        self.canvas.create_text(20, 30, anchor=W, font="Purisa", fill="#fb0", text="Most relationships seem so transitory")
+        self.h_grid(self.canvas)
+        self.v_grid(self.canvas)
+        #self.canvas.create_line(0,0,300,300, fill="#fb0")
+        #self.canvas.create_text(20, 30, anchor=W, font="Purisa", fill="#fb0", text="Most relationships seem so transitory")
     
+    def h_grid(self, canvas ):
+        y_inc = (self.__canvas_h - self.__t_margin - self.__b_margin) / self.__v_step
+        for step in range(0, self.__v_step + 1):
+            # Draw the line
+            self.canvas.create_line(self.__l_margin, self.__t_margin + (y_inc * step), self.__canvas_w - self.__r_margin , self.__t_margin + (y_inc * step), fill=self.__grid_color)
+            # Draw legend
+            self.canvas.create_text(10, self.__t_margin + (y_inc * step), anchor=W, font="Purisa 10", fill="#fb0", text=str(self.__high_db - (self.__db_step * step)))
+    
+    def v_grid(self, canvas ):
+        x_inc = (self.__canvas_w - self.__l_margin - self.__r_margin) / self.__h_step
+        for step in range(0, self.__h_step + 1):
+            self.canvas.create_line(self.__l_margin + (x_inc * step), self.__t_margin, self.__l_margin + (x_inc * step), self.__canvas_h - self.__b_margin, fill=self.__grid_color)    
+            
     #-------------------------------------------------
     # Utility methods
     #
