@@ -55,12 +55,10 @@ class Interface:
     # PUBLIC
     #=====================================================
     def init_lib(self):
-        
         #Initialise sets up the context
         self.f_init()
     
     def run_lib(self):
-        
         # Start runs the lib main thread which starts everything
         self.f_start()
         

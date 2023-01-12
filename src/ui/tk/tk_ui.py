@@ -83,8 +83,14 @@ class TkUi:
         self.__r_margin = 30
         self.__t_margin = 20
         self.__b_margin = 30
+        # spec
+        self.__v_space = self.__canvas_h - self.__t_margin - self.__b_margin
+        self.__h_space = self.__canvas_w - self.__l_margin - self.__r_margin
+        self.__db_range = abs(self.__low_db) + self.__high_db
+        self.__dbpp = float(float(self.__v_space)/self.__db_range)
         # colors
         self.__grid_color = 'slate gray'
+        self.__plot_color = 'yellow'
         
         # Get the connector instance
         self.__con = getInstance('interface_inst')
@@ -92,7 +98,11 @@ class TkUi:
 
     # Enter main UI loop
     def run (self):
+        # Build the UI
         self.build_ui()
+        # Create a timer event
+        self.root.after(100, self.timer_evnt)
+        # Main loop exits when window is closed
         self.root.mainloop()
     
     #-------------------------------------------------
@@ -179,13 +189,12 @@ class TkUi:
         self.create_rectangle(0, 0, 600, 300, fill='dark slate gray')
         self.h_grid(self.canvas)
         self.v_grid(self.canvas)
-        #self.canvas.create_line(0,0,300,300, fill="#fb0")
-        #self.canvas.create_text(20, 30, anchor=W, font="Purisa", fill="#fb0", text="Most relationships seem so transitory")
+        if self.init: self.spec(self.canvas)
     
     def h_grid(self, canvas ):
         y_inc = (self.__canvas_h - self.__t_margin - self.__b_margin) / self.__v_step
         for step in range(0, self.__v_step + 1):
-            # Draw the line
+            # Draw line
             self.canvas.create_line(self.__l_margin, self.__t_margin + (y_inc * step), self.__canvas_w - self.__r_margin , self.__t_margin + (y_inc * step), fill=self.__grid_color)
             # Draw legend
             self.canvas.create_text(10, self.__t_margin + (y_inc * step), anchor=W, font="Purisa 10", fill="#fb0", text=str(self.__high_db - (self.__db_step * step)))
@@ -194,10 +203,24 @@ class TkUi:
         x_inc = (self.__canvas_w - self.__l_margin - self.__r_margin) / self.__h_step
         f_start = float((self.__last_freq - (self.__span_freq/2))/1000000.0)
         for step in range(0, self.__h_step + 1):
+            # Draw line
             self.canvas.create_line(self.__l_margin + (x_inc * step), self.__t_margin, self.__l_margin + (x_inc * step), self.__canvas_h - self.__b_margin, fill=self.__grid_color)
             # Draw legend
             f = str("%.3f" % round(f_start + float((self.__f_step * step)/1000000.0) ,3))
             self.canvas.create_text(self.__l_margin - 15 + (x_inc * step), self.__canvas_h - 10, anchor=W, font="Purisa 10", fill="#fb0", text=f)
+    
+    def spec(self, canvas):
+        # Get data if ready
+        d = self.__con.get_disp_data()
+        # We have one value for each pixel in the display area
+        for pix in range(0, self.__h_space, 2):
+            self.canvas.create_line(pix, self.__db_to_y(d[pix]), pix+1, self.__db_to_y(d[pix+1]), fill=self.__plot_color)
+        
+    def __db_to_y(self, dbm):
+        # Not sure how to offset and scale this
+        #rel_db = (abs(self.__st_db) - abs(int(dbm))) + 150
+        rel_db = (abs(self.__low_db) - abs(int(dbm)))
+        return (self.__t_margin + self.__v_space) - (rel_db * self.__dbpp)
             
     #-------------------------------------------------
     # Utility methods
@@ -224,8 +247,6 @@ class TkUi:
         self.vfo_digits[8].config(text=freq_str[8])
         
         self.__last_freq = freq
-        self.build_display(self.canvas)
-        self.root.update()
     
     def __inc_freq(self, evnt, inc):
         v = inc
@@ -249,6 +270,7 @@ class TkUi:
     #-------------------------------------------------
     # Event methods
     #
+    # On VFO digit scroll
     def on100MHz(self, evnt):
         self.__inc_freq(evnt, 100000000)
     def on10MHz(self, evnt):
@@ -267,12 +289,24 @@ class TkUi:
         self.__inc_freq(evnt, 10)
     def on1Hz(self, evnt):
         self.__inc_freq(evnt, 1)
+    
+    # On timer
+    def timer_evnt(self):
+        # Build displays
+        if self.init: self.build_display(self.canvas)
+        self.root.update()
+        self.root.after(100, self.timer_evnt)
         
     #-------------------------------------------------
     # Control methods
     #
     def start_lib(self):
         self.__con.run_lib()
+        sleep(1)
+        # Set our display width
+        self.__con.set_disp_width(self.__h_space)
+        # Create a timer event
+        self.root.after(100, self.timer_evnt)
         self.init = True
     
     def stop_lib(self, ):
